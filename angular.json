@@ -1,0 +1,7 @@
+{
+  "version": 2,
+  "projects": {
+    "gitter-app": "apps/gitter-app",
+    "gitter-app-e2e": "apps/gitter-app-e2e"
+  }
+}

@@ -1,0 +1,94 @@
+{
+  "projectType": "application",
+  "root": "apps/gitter-app",
+  "sourceRoot": "apps/gitter-app/src",
+  "prefix": "gitter",
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:browser",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/gitter-app",
+        "index": "apps/gitter-app/src/index.html",
+        "main": "apps/gitter-app/src/main.ts",
+        "polyfills": "apps/gitter-app/src/polyfills.ts",
+        "tsConfig": "apps/gitter-app/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          "apps/gitter-app/src/favicon.ico",
+          "apps/gitter-app/src/assets"
+        ],
+        "styles": ["apps/gitter-app/src/styles.scss"],
+        "scripts": []
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "fileReplacements": [
+            {
+              "replace": "apps/gitter-app/src/environments/environment.ts",
+              "with": "apps/gitter-app/src/environments/environment.prod.ts"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "buildOptimizer": false,
+          "optimization": false,
+          "vendorChunk": true,
+          "extractLicenses": false,
+          "sourceMap": true,
+          "namedChunks": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "browserTarget": "gitter-app:build:production"
+        },
+        "development": {
+          "browserTarget": "gitter-app:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "browserTarget": "gitter-app:build"
+      }
+    },
+    "lint": {
+      "executor": "@nrwl/linter:eslint",
+      "options": {
+        "lintFilePatterns": [
+          "apps/gitter-app/src/**/*.ts",
+          "apps/gitter-app/src/**/*.html"
+        ]
+      }
+    },
+    "test": {
+      "executor": "@nrwl/jest:jest",
+      "outputs": ["coverage/apps/gitter-app"],
+      "options": {
+        "jestConfig": "apps/gitter-app/jest.config.js",
+        "passWithNoTests": true
+      }
+    }
+  },
+  "tags": []
+}
