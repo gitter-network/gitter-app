@@ -1,0 +1,28 @@
+.gitter-menu {
+  height: 4rem;
+  color: #fff;
+  padding: 1rem;
+}
+
+.jobs-container {
+  width: 100%;
+  max-width: 60rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.2);
+}
+
+::ng-deep .table-row {
+  background: transparent !important;
+  color: #fff !important;
+  font-weight: 700;
+  &:hover {
+    background: rgba(255, 255, 255, 0.1) !important;
+    cursor: pointer;
+  }
+
+  .job-subtitle {
+    font-weight: 400;
+    font-size: 14px;
+  }
+}

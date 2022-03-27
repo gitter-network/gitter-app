@@ -5,10 +5,25 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ButtonModule } from 'primeng/button';
 
 import { AppComponent } from './app.component';
+import { JobComponent } from './components/job/job.component';
+import { TruncateAddressPipe } from './pipes/truncateAddress.pipe';
+import { SelectButtonModule } from 'primeng/selectbutton';
+import { FormsModule } from '@angular/forms';
+import { TableModule } from 'primeng/table';
+import { TagModule } from 'primeng/tag';
 
 @NgModule({
-  declarations: [AppComponent],
-  imports: [BrowserModule, BrowserAnimationsModule, CommonModule, ButtonModule],
+  declarations: [AppComponent, JobComponent, TruncateAddressPipe],
+  imports: [
+    BrowserModule,
+    BrowserAnimationsModule,
+    CommonModule,
+    ButtonModule,
+    SelectButtonModule,
+    FormsModule,
+    TableModule,
+    TagModule,
+  ],
   providers: [],
   bootstrap: [AppComponent],
 })
