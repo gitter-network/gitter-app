@@ -10,6 +10,12 @@
   padding: 1.5rem;
   border-radius: 1rem;
   background: rgba(255, 255, 255, 0.2);
+
+  .jobs-container-title {
+    font-size: 20px;
+    color: #fff;
+    font-weight: 800;
+  }
 }
 
 ::ng-deep .table-row {
@@ -20,9 +26,17 @@
     background: rgba(255, 255, 255, 0.1) !important;
     cursor: pointer;
   }
-
   .job-subtitle {
     font-weight: 400;
     font-size: 14px;
+  }
+}
+
+::ng-deep .job-table.p-datatable {
+  .p-datatable-header,
+  .p-datatable-thead > tr > th {
+    background: transparent;
+    color: #fff;
+    font-weight: 700;
   }
 }

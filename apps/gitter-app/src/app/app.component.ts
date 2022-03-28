@@ -1,4 +1,5 @@
 import { Component, OnInit } from '@angular/core';
+import { PrimeNGConfig } from 'primeng/api';
 import { forkJoin, map, Observable, switchMap, tap } from 'rxjs';
 import { environment } from '../environments/environment';
 import { GitterJob, GitterService } from './services/gitter.service';

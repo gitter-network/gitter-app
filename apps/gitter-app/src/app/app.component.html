@@ -33,15 +33,22 @@
     optionValue="value"
   ></p-selectButton>
   <div class="jobs-container mt-5">
-    <p-table [rowHover]="true" [value]="accountData.jobs">
-      <!-- <ng-template pTemplate="header">
+    <div class="mb-5 flex justify-content-between">
+      <span class="jobs-container-title">My Jobs</span>
+      <button pButton label="New Job"></button>
+    </div>
+    <p-table
+      styleClass="job-table"
+      [rowHover]="true"
+      [value]="accountData.jobs"
+    >
+      <ng-template pTemplate="header">
         <tr>
-          <th>Vin</th>
-          <th>Year</th>
-          <th>Brand</th>
-          <th>Color</th>
+          <th>#</th>
+          <th>Details</th>
+          <th class="text-right">Total Tx Fees</th>
         </tr>
-      </ng-template> -->
+      </ng-template>
       <ng-template pTemplate="body" let-job let-i="rowIndex">
         <tr class="table-row">
           <td>
@@ -53,7 +60,11 @@
                 ><p>{{ job.id }}</p></span
               >
               <span class="job-subtitle"
-                ><p>Execution: {{ job.contract }} / {{ job.method }}</p></span
+                ><p>
+                  Execution:
+                  {{ job.contract }}
+                  / {{ job.method }}
+                </p></span
               >
             </div>
           </td>
