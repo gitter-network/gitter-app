@@ -23,6 +23,7 @@
     "@cityofzion/neon-js": "5.0.0-next.10",
     "@fontsource/inter": "^4.5.7",
     "@nrwl/angular": "13.9.4",
+    "@rx-angular/state": "^1.6.0",
     "primeflex": "^3.1.0",
     "primeicons": "^5.0.0",
     "primeng": "^13.0.0-rc.2",

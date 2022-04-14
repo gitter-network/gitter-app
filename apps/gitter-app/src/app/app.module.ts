@@ -1,30 +1,27 @@
-import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
-import { ButtonModule } from 'primeng/button';
-
+import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
-import { JobComponent } from './components/job/job.component';
-import { TruncateAddressPipe } from './pipes/truncateAddress.pipe';
-import { SelectButtonModule } from 'primeng/selectbutton';
-import { FormsModule } from '@angular/forms';
-import { TableModule } from 'primeng/table';
-import { TagModule } from 'primeng/tag';
+import { SharedModule } from './shared/shared.module';
+import { HeaderComponent } from './header/header.component';
+import { GlobalState, GLOBAL_RX_STATE } from './state/global.state';
+import { RxState } from '@rx-angular/state';
 
 @NgModule({
-  declarations: [AppComponent, JobComponent, TruncateAddressPipe],
+  declarations: [AppComponent, HeaderComponent],
   imports: [
     BrowserModule,
     BrowserAnimationsModule,
-    CommonModule,
-    ButtonModule,
-    SelectButtonModule,
-    FormsModule,
-    TableModule,
-    TagModule,
+    SharedModule,
+    AppRoutingModule,
   ],
-  providers: [],
+  providers: [
+    {
+      provide: GLOBAL_RX_STATE,
+      useFactory: () => new RxState<GlobalState>(),
+    },
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}
