@@ -6,6 +6,7 @@ import { SelectButtonModule } from 'primeng/selectbutton';
 import { FormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
+import { InputTextModule } from 'primeng/inputtext';
 
 @NgModule({
   declarations: [TruncateAddressPipe],
@@ -16,6 +17,7 @@ import { TagModule } from 'primeng/tag';
     ButtonModule,
     TagModule,
     CommonModule,
+    InputTextModule,
   ],
   exports: [
     SelectButtonModule,
@@ -25,6 +27,7 @@ import { TagModule } from 'primeng/tag';
     TagModule,
     CommonModule,
     TruncateAddressPipe,
+    InputTextModule,
   ],
 })
 export class SharedModule {}

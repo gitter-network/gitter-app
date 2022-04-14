@@ -3,6 +3,7 @@ import { map, Subject, switchMap } from 'rxjs';
 import { NeolineService } from '../services/neoline.service';
 import { GlobalState, GLOBAL_RX_STATE } from '../state/global.state';
 import { RxState } from '@rx-angular/state';
+import { TreasuryService } from '../services/treasury.service';
 
 interface HeaderState {
   isLoading: boolean;
@@ -18,25 +19,17 @@ interface HeaderState {
 export class HeaderComponent extends RxState<HeaderState> {
   readonly connectWalletBtnClick$ = new Subject<void>();
   readonly state$ = this.select();
-  readonly loadBalance$ = this.globalState.select('address').pipe(
-    switchMap(() => this.neoline.getBalance()),
-    map((balances) => {
-      const gas: number =
-        Number(
-          balances[this.globalState.get('address')].filter(
-            (v) => v.symbol === 'GAS'
-          )[0]?.amount
-        ) ?? 0;
-      return gas;
-    })
-  );
+  readonly loadBalance$ = this.globalState
+    .select('address')
+    .pipe(switchMap((a) => this.treasury.getBalance(a)));
 
   constructor(
     @Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>,
-    private neoline: NeolineService
+    private neoline: NeolineService,
+    private treasury: TreasuryService
   ) {
     super();
-    this.set({ isLoading: false });
+    this.set({ isLoading: false, balance: 0 });
     this.connect('address', this.globalState.select('address'));
     this.connect('balance', this.loadBalance$);
   }

@@ -9,7 +9,12 @@
     <div class="jobs-container mt-5">
       <div class="mb-5 flex justify-content-between">
         <span class="jobs-container-title">My Jobs</span>
-        <button routerLink="/new" pButton label="New Job"></button>
+        <button
+          *ngIf="s.address"
+          routerLink="/new"
+          pButton
+          label="New Job"
+        ></button>
       </div>
       <p-table styleClass="job-table" [rowHover]="true" [value]="s.jobs">
         <ng-template pTemplate="header">

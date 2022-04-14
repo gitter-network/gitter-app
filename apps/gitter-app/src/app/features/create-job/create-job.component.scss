@@ -1,0 +1,26 @@
+
+.jobs-container {
+  width: 100%;
+  max-width: 60rem;
+  padding: 1.5rem;
+  border-radius: 1rem;
+  background: rgba(255, 255, 255, 0.2);
+
+  .jobs-container-title {
+    font-size: 20px;
+    color: #fff;
+    font-weight: 800;
+  }
+
+  .new-job-input {
+    margin-top: 10px;
+    background-color: rgba(255,255,255,.1);
+  }
+
+  ::ng-deep .selectMethodDropdown {
+    margin-top: 10px;
+    background-color: rgba(255,255,255,.1);
+  }
+}
+
+

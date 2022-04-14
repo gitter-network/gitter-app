@@ -1,1 +1,48 @@
-<p>create-job works!</p>
+<ng-container *ngIf="state$ | async as s">
+  <div class="mt-5 flex flex-column justify-content-center align-items-center">
+    <h2 class="text-white">New Job</h2>
+    <div class="jobs-container mt-5">
+      <div class="mb-5 flex flex-column">
+        <div class="mb-5">
+          <span class="jobs-container-title">Execute</span>
+        </div>
+        <div class="mb-5">
+          <span class="p-fluid">
+            <label for="contract-address" class="text-white"
+              >Contract address</label
+            >
+            <span class="p-input-icon-right">
+              <i
+                [ngClass]="
+                  s.isLoadingContractData ? 'pi pi-spin pi-spinner' : ''
+                "
+              ></i>
+              <input
+                class="new-job-input"
+                id="contract-address"
+                type="text"
+                pInputText
+                placeholder="0x..."
+                [(ngModel)]="s.contractAddress"
+                (change)="onContractAddressChange$.next(s.contractAddress)"
+              />
+            </span>
+          </span>
+        </div>
+        <div *ngIf="s.contractMethods.length">
+          <span class="p-fluid">
+            <label for="contract-method" class="text-white">Methods</label>
+            <p-dropdown
+              styleClass="selectMethodDropdown"
+              id="contract-method"
+              [options]="s.contractMethods"
+              [(ngModel)]="s.selectedMethod"
+              optionLabel="name"
+              placeholder="Select a method"
+            ></p-dropdown>
+          </span>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
