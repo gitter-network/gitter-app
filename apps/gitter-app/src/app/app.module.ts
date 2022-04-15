@@ -7,6 +7,7 @@ import { SharedModule } from './shared/shared.module';
 import { HeaderComponent } from './header/header.component';
 import { GlobalState, GLOBAL_RX_STATE } from './state/global.state';
 import { RxState } from '@rx-angular/state';
+import { DialogModule } from 'primeng/dialog';
 
 @NgModule({
   declarations: [AppComponent, HeaderComponent],
@@ -15,6 +16,7 @@ import { RxState } from '@rx-angular/state';
     BrowserAnimationsModule,
     SharedModule,
     AppRoutingModule,
+    DialogModule,
   ],
   providers: [
     {

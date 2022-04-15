@@ -2,7 +2,7 @@
   <div class="mt-5 flex flex-column justify-content-center align-items-center">
     <h2 class="text-white">New Job</h2>
     <div class="jobs-container mt-5">
-      <div class="mb-5 flex flex-column">
+      <div class="flex flex-column">
         <div class="mb-5 flex justify-content-between">
           <span class="jobs-container-title">Execute</span>
           <a routerLink="/" class="text-white">Cancel</a>
@@ -32,15 +32,22 @@
           </span>
           <div
             class="mt-3 text-xs flex align-items-center"
-            *ngIf="s.contractMethods.length"
+            *ngIf="s.contractMethods && s.contractMethods.length"
           >
             <i class="pi pi-check-circle text-green-500"></i>
             <span class="text-white ml-1">ABI fetched</span>
           </div>
+          <div
+            class="mt-3 text-xs flex align-items-center"
+            *ngIf="s.contractMethods && !s.contractMethods.length"
+          >
+            <i class="pi pi-times-circle error-message"></i>
+            <span class="text-white ml-1">No methods found</span>
+          </div>
         </div>
 
         <!-- Contract Methods Dropdown -->
-        <div class="mb-5" *ngIf="s.contractMethods.length">
+        <div class="mb-5" *ngIf="s.contractMethods && s.contractMethods.length">
           <span class="p-fluid">
             <label for="contract-method" class="text-white">Methods</label>
             <p-dropdown
@@ -66,12 +73,9 @@
         <ng-container *ngIf="s.selectedMethod">
           <div class="mb-2" *ngFor="let param of s.selectedMethod.parameters">
             <span class="p-fluid">
-              <label for="method-params" class="text-white">{{
-                param.name
-              }}</label>
+              <label class="text-white">{{ param.name }}</label>
               <input
                 class="new-job-input"
-                id="method-params"
                 type="text"
                 pInputText
                 [placeholder]="contractParamType[param.type]"

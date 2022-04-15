@@ -9,6 +9,9 @@ interface HeaderState {
   isLoading: boolean;
   address: string;
   balance: number;
+  displayFundsModal: boolean;
+  depositAmount: number;
+  withdrawAmount: number;
 }
 
 @Component({
@@ -34,10 +37,22 @@ export class HeaderComponent extends RxState<HeaderState> {
     this.connect('balance', this.loadBalance$);
   }
 
+  displayFundsModal(): void {
+    this.set({ displayFundsModal: true });
+  }
+
   connectWallet(): void {
     this.globalState.connect(
       'address',
       this.neoline.getAccount().pipe(map((v) => v.address))
     );
   }
+
+  deposit(amount: number): void {
+    this.treasury
+      .addToBalance(this.get('address'), amount)
+      .subscribe((res) => console.log(res));
+  }
+
+  withdraw(amount: number): void {}
 }

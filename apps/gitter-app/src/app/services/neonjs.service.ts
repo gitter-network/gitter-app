@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { from, Observable, of, throwError } from 'rxjs';
+import { from, Observable, of, throwError, catchError } from 'rxjs';
 import { rpc, sc } from '@cityofzion/neon-js';
 import { ContractMethodDefinition } from '@cityofzion/neon-core/lib/sc/';
 import { map, mergeMap } from 'rxjs/operators';
@@ -29,8 +29,14 @@ export class NeonJSService {
   public fetchMethods(hash: string): Observable<ContractMethodDefinition[]> {
     return from(
       new rpc.RPCClient(environment.testnet.nodeUrl).getContractState(hash)
-    ).pipe(
-      map((res) => sc.ContractManifest.fromJson(res.manifest).abi.methods)
-    );
+    )
+      .pipe(
+        map((res) => sc.ContractManifest.fromJson(res.manifest).abi.methods)
+      )
+      .pipe(
+        catchError(() => {
+          return of([]);
+        })
+      );
   }
 }

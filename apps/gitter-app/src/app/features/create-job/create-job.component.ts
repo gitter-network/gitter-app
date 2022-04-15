@@ -46,7 +46,6 @@ export class CreateJobComponent extends RxState<CreateJobState> {
     this.set({
       isLoadingContractData: false,
       contractAddress: '',
-      contractMethods: [],
     });
     this.connect('contractMethods', this.loadMethods$);
   }

@@ -7,6 +7,7 @@
         pButton
         class="p-button-outlined p-button-warning ml-5"
         [label]="'Funds: ' + s.balance + ' GAS'"
+        (click)="displayFundsModal()"
       ></button>
     </div>
     <div>
@@ -31,4 +32,53 @@
       </ng-template>
     </div>
   </div>
+
+  <p-dialog [modal]="true" [(visible)]="s.displayFundsModal">
+    <ng-template pTemplate="header">
+      <span class="text-white"><h3>Your funds:</h3></span></ng-template
+    >
+    <div class="flex flex-column p-fluid">
+      <div class="text-center text-white mb-3 text-3xl text-bold">
+        <span>{{ s.balance }} GAS</span>
+      </div>
+      <div class="flex">
+        <input
+          min="0"
+          pInputText
+          type="number"
+          placeholder="0.00000000"
+          class="m-1 number-input"
+          [(ngModel)]="s.depositAmount"
+        />
+        <button
+          pButton
+          type="button"
+          class="p-button-outlined m-1 p-button-warning"
+          label="Deposit"
+          [disabled]="!s.depositAmount || s.depositAmount === 0"
+          (click)="deposit(s.depositAmount)"
+        ></button>
+      </div>
+      <div class="flex">
+        <input
+          min="0"
+          pInputText
+          type="number"
+          placeholder="0.00000000"
+          class="m-1 number-input"
+          [(ngModel)]="s.withdrawAmount"
+        />
+        <button
+          pButton
+          type="button"
+          class="p-button-outlined m-1 p-button-warning"
+          label="Withdraw"
+          (click)="withdraw(s.withdrawAmount)"
+          [disabled]="
+            !s.withdrawAmount || s.withdrawAmount === 0 || s.balance === 0
+          "
+        ></button>
+      </div>
+    </div>
+  </p-dialog>
 </ng-container>

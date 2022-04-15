@@ -1,5 +1,6 @@
 import { Component, Inject, OnInit } from '@angular/core';
 import { RxState } from '@rx-angular/state';
+import { map } from 'rxjs';
 import { NeolineService } from './services/neoline.service';
 import { GlobalState, GLOBAL_RX_STATE } from './state/global.state';
 
@@ -14,6 +15,12 @@ export class AppComponent implements OnInit {
     private neoline: NeolineService
   ) {
     this.globalState.connect('address', this.neoline.ACCOUNT_CHANGED_EVENT$);
+
+    //TODO: delete again
+    this.globalState.connect(
+      'address',
+      this.neoline.getAccount().pipe(map((v) => v.address))
+    );
   }
 
   ngOnInit(): void {
