@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import {
   debounceTime,
   distinctUntilChanged,
+  map,
   Subject,
   switchMap,
   tap,
@@ -11,13 +12,15 @@ import { NeonJSService } from '../../services/neonjs.service';
 import {
   ContractMethodDefinition,
   ContractParameterDefinition,
+  ContractParamType,
 } from '@cityofzion/neon-core/lib/sc/';
 
+type UpdatedMethodDef = ContractMethodDefinition & { displayName: string };
 interface CreateJobState {
   contractAddress: string;
   isLoadingContractData: boolean;
-  contractMethods: any[];
-  selectedMethod: any;
+  contractMethods: UpdatedMethodDef[];
+  selectedMethod: UpdatedMethodDef;
 }
 
 @Component({
@@ -26,6 +29,7 @@ interface CreateJobState {
   styleUrls: ['./create-job.component.scss'],
 })
 export class CreateJobComponent extends RxState<CreateJobState> {
+  readonly contractParamType = ContractParamType;
   readonly state$ = this.select();
   readonly onContractAddressChange$ = new Subject<string>();
   readonly loadMethods$ = this.onContractAddressChange$.pipe(
@@ -33,6 +37,7 @@ export class CreateJobComponent extends RxState<CreateJobState> {
     distinctUntilChanged(),
     tap(() => this.set({ isLoadingContractData: true })),
     switchMap((a) => this.neonJs.fetchMethods(a)),
+    map((methods) => this.mapToMethodSignature(methods)),
     tap(() => this.set({ isLoadingContractData: false }))
   );
 
@@ -46,10 +51,29 @@ export class CreateJobComponent extends RxState<CreateJobState> {
     this.connect('contractMethods', this.loadMethods$);
   }
 
-  /* private mapToMethodSignature(cmd: ContractMethodDefinition[]): any[] {
-    const displayName = cmd.parameters.reduce((prev, curr) => {
-      return prev + ', ' + curr.name + curr.type;
-    }, '');
-    return { displayName: displayName, ...cmd };
-  } */
+  private mapToMethodSignature(cmd: ContractMethodDefinition[]): any[] {
+    return cmd.map((method) => {
+      return {
+        ...method,
+        displayName:
+          method.name +
+          '(<small>' +
+          method.parameters.reduce(
+            (prev: string, curr: ContractParameterDefinition, i: number) => {
+              const isLast = i == method.parameters.length - 1;
+              return (
+                prev +
+                '<span class="paramType">' +
+                ContractParamType[curr.type] +
+                '</span> ' +
+                curr.name +
+                (isLast ? '' : ', ')
+              );
+            },
+            ''
+          ) +
+          '</small>)',
+      };
+    });
+  }
 }

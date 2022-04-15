@@ -20,7 +20,12 @@
   ::ng-deep .selectMethodDropdown {
     margin-top: 10px;
     background-color: rgba(255,255,255,.1);
+    .paramType {
+      color: #0050fd !important;
+    }
   }
+
+
 }
 
 
