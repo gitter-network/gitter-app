@@ -1,5 +1,5 @@
 import { Component, Inject } from '@angular/core';
-import { map, Subject, switchMap } from 'rxjs';
+import { map, Subject, switchMap, tap } from 'rxjs';
 import { NeolineService } from '../services/neoline.service';
 import { GlobalState, GLOBAL_RX_STATE } from '../state/global.state';
 import { RxState } from '@rx-angular/state';
@@ -22,9 +22,10 @@ interface HeaderState {
 export class HeaderComponent extends RxState<HeaderState> {
   readonly connectWalletBtnClick$ = new Subject<void>();
   readonly state$ = this.select();
-  readonly loadBalance$ = this.globalState
-    .select('address')
-    .pipe(switchMap((a) => this.treasury.getBalance(a)));
+  readonly loadBalance$ = this.globalState.select('address').pipe(
+    switchMap((a) => this.treasury.getBalance(a)),
+    map((balance) => balance / Math.pow(10, 8))
+  );
 
   constructor(
     @Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>,
@@ -49,6 +50,7 @@ export class HeaderComponent extends RxState<HeaderState> {
   }
 
   deposit(amount: number): void {
+    amount = amount * Math.pow(10, 8);
     this.treasury
       .addToBalance(this.get('address'), amount)
       .subscribe((res) => console.log(res));

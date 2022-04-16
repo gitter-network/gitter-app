@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Inject } from '@angular/core';
 import {
   debounceTime,
   distinctUntilChanged,
@@ -14,6 +14,9 @@ import {
   ContractParameterDefinition,
   ContractParamType,
 } from '@cityofzion/neon-core/lib/sc/';
+import { SelectItem } from 'primeng/api';
+import { GlobalState, GLOBAL_RX_STATE } from '../../state/global.state';
+import { TreasuryService } from '../../services/treasury.service';
 
 type UpdatedMethodDef = ContractMethodDefinition & { displayName: string };
 interface CreateJobState {
@@ -21,6 +24,14 @@ interface CreateJobState {
   isLoadingContractData: boolean;
   contractMethods: UpdatedMethodDef[];
   selectedMethod: UpdatedMethodDef;
+  inputOptions: SelectItem[];
+  inputOption: string;
+  timeOptions: SelectItem[];
+  selectedTimeOption: string;
+  balance: number;
+  depositAmount: number;
+  taskName: string;
+  parameters: any[];
 }
 
 @Component({
@@ -32,6 +43,10 @@ export class CreateJobComponent extends RxState<CreateJobState> {
   readonly contractParamType = ContractParamType;
   readonly state$ = this.select();
   readonly onContractAddressChange$ = new Subject<string>();
+  readonly loadBalance$ = this.globalState.select('address').pipe(
+    switchMap((a) => this.treasury.getBalance(a)),
+    map((balance) => balance / Math.pow(10, 8))
+  );
   readonly loadMethods$ = this.onContractAddressChange$.pipe(
     debounceTime(300),
     distinctUntilChanged(),
@@ -41,13 +56,45 @@ export class CreateJobComponent extends RxState<CreateJobState> {
     tap(() => this.set({ isLoadingContractData: false }))
   );
 
-  constructor(private neonJs: NeonJSService) {
+  constructor(
+    private neonJs: NeonJSService,
+    @Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>,
+    private treasury: TreasuryService
+  ) {
     super();
+
+    this.connect('balance', this.loadBalance$);
     this.set({
       isLoadingContractData: false,
       contractAddress: '',
+      timeOptions: [
+        { value: 'time', label: 'Time', disabled: true },
+        { value: 'everyBlock', label: 'Every block' },
+      ],
+      selectedTimeOption: 'everyBlock',
+      inputOptions: [
+        { value: 'static', label: 'Static Inputs' },
+        {
+          value: 'dynamic',
+          label: 'Dynamic Inputs via Resolver',
+          disabled: true,
+        },
+      ],
+      inputOption: 'static',
     });
     this.connect('contractMethods', this.loadMethods$);
+  }
+
+  createJob(): void {
+    //TODO
+    console.log(this.get('parameters'));
+  }
+
+  deposit(amount: number): void {
+    amount = amount * Math.pow(10, 8);
+    this.treasury
+      .addToBalance(this.globalState.get('address'), amount)
+      .subscribe((res) => console.log(res));
   }
 
   private mapToMethodSignature(cmd: ContractMethodDefinition[]): any[] {

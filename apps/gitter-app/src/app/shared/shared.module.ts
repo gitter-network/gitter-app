@@ -7,6 +7,7 @@ import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
+import { InputNumberModule } from 'primeng/inputnumber';
 
 @NgModule({
   declarations: [TruncateAddressPipe],
@@ -19,6 +20,7 @@ import { InputTextModule } from 'primeng/inputtext';
     TagModule,
     CommonModule,
     InputTextModule,
+    InputNumberModule,
   ],
   exports: [
     SelectButtonModule,
@@ -30,6 +32,7 @@ import { InputTextModule } from 'primeng/inputtext';
     CommonModule,
     TruncateAddressPipe,
     InputTextModule,
+    InputNumberModule,
   ],
 })
 export class SharedModule {}

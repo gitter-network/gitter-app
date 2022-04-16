@@ -5,6 +5,7 @@
   padding: 1.5rem;
   border-radius: 1rem;
   background: rgba(255, 255, 255, 0.2);
+  margin-top: 25px;
 
   .jobs-container-title {
     font-size: 20px;
@@ -21,15 +22,20 @@
     margin-top: 10px;
     background-color: rgba(255,255,255,.1);
     .paramType {
-      color: #0050fd !important;
+      color: #4338CA !important;
     }
   }
+
+  ::ng-deep .number-input input{
+    background-color: rgba(255,255,255,.1) !important;
+  }
+
+  .paramType {
+      color: #4338CA !important;
+    }
 
   .error-message {
     color: #f72b2b;
   }
 
-
 }
-
-

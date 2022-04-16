@@ -6,7 +6,7 @@
         *ngIf="s.address"
         pButton
         class="p-button-outlined p-button-warning ml-5"
-        [label]="'Funds: ' + s.balance + ' GAS'"
+        [label]="'Funds: ' + s.balance.toFixed(2) + ' GAS'"
         (click)="displayFundsModal()"
       ></button>
     </div>
@@ -39,17 +39,20 @@
     >
     <div class="flex flex-column p-fluid">
       <div class="text-center text-white mb-3 text-3xl text-bold">
-        <span>{{ s.balance }} GAS</span>
+        <span>{{ s.balance.toFixed(8) }} GAS</span>
       </div>
       <div class="flex">
-        <input
-          min="0"
-          pInputText
-          type="number"
-          placeholder="0.00000000"
-          class="m-1 number-input"
+        <p-inputNumber
           [(ngModel)]="s.depositAmount"
-        />
+          mode="decimal"
+          [minFractionDigits]="8"
+          [maxFractionDigits]="8"
+          styleClass="number-input"
+          class="m-1"
+          placeholder="0.00000000"
+          [min]="0"
+        ></p-inputNumber>
+
         <button
           pButton
           type="button"
@@ -60,14 +63,16 @@
         ></button>
       </div>
       <div class="flex">
-        <input
-          min="0"
-          pInputText
-          type="number"
-          placeholder="0.00000000"
-          class="m-1 number-input"
+        <p-inputNumber
           [(ngModel)]="s.withdrawAmount"
-        />
+          mode="decimal"
+          [minFractionDigits]="8"
+          [maxFractionDigits]="8"
+          class="m-1"
+          styleClass="number-input"
+          placeholder="0.00000000"
+          [min]="0"
+        ></p-inputNumber>
         <button
           pButton
           type="button"

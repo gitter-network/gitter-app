@@ -31,7 +31,11 @@ export class NeonJSService {
       new rpc.RPCClient(environment.testnet.nodeUrl).getContractState(hash)
     )
       .pipe(
-        map((res) => sc.ContractManifest.fromJson(res.manifest).abi.methods)
+        map((res) =>
+          sc.ContractManifest.fromJson(res.manifest).abi.methods.filter(
+            (m) => !m.safe
+          )
+        )
       )
       .pipe(
         catchError(() => {

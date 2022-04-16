@@ -1,13 +1,14 @@
 <ng-container *ngIf="state$ | async as s">
   <div class="mt-5 flex flex-column justify-content-center align-items-center">
     <h2 class="text-white">New Job</h2>
-    <div class="jobs-container mt-5">
+
+    <!-- =================== EXECUTE JOBS CONTAINER =================== -->
+    <div class="jobs-container">
       <div class="flex flex-column">
         <div class="mb-5 flex justify-content-between">
           <span class="jobs-container-title">Execute</span>
           <a routerLink="/" class="text-white">Cancel</a>
         </div>
-        <!-- Contract Address Input -->
         <div class="mb-5">
           <span class="p-fluid">
             <label for="contract-address" class="text-white"
@@ -46,7 +47,6 @@
           </div>
         </div>
 
-        <!-- Contract Methods Dropdown -->
         <div class="mb-5" *ngIf="s.contractMethods && s.contractMethods.length">
           <span class="p-fluid">
             <label for="contract-method" class="text-white">Methods</label>
@@ -54,6 +54,7 @@
               styleClass="selectMethodDropdown"
               id="contract-method"
               [options]="s.contractMethods"
+              optionLabel="displayName"
               [(ngModel)]="s.selectedMethod"
               placeholder="Select a method"
             >
@@ -70,20 +71,137 @@
             </p-dropdown>
           </span>
         </div>
-        <ng-container *ngIf="s.selectedMethod">
-          <div class="mb-2" *ngFor="let param of s.selectedMethod.parameters">
+
+        <ng-container
+          *ngIf="s.selectedMethod && s.selectedMethod.parameters.length"
+        >
+          <div class="mb-5 flex justify-content-center">
+            <p-selectButton
+              [options]="s.inputOptions"
+              [(ngModel)]="s.inputOption"
+              optionLabel="label"
+              optionValue="value"
+            ></p-selectButton>
+          </div>
+        </ng-container>
+
+        <ng-container *ngIf="s.inputOption && s.selectedMethod">
+          <div
+            class="mb-2"
+            *ngFor="let param of s.selectedMethod.parameters; let i = index"
+          >
             <span class="p-fluid">
-              <label class="text-white">{{ param.name }}</label>
+              <label class="text-white"
+                ><span class="text-sm paramType">{{
+                  contractParamType[param.type]
+                }}</span>
+                {{ param.name }}</label
+              >
               <input
                 class="new-job-input"
                 type="text"
                 pInputText
+                [(ngModel)]="s.parameters[i] || ''"
                 [placeholder]="contractParamType[param.type]"
               />
             </span>
           </div>
         </ng-container>
       </div>
+    </div>
+
+    <!-- =================== WHEN CONTAINER =================== -->
+    <div *ngIf="s.selectedMethod" class="jobs-container">
+      <div class="flex flex-column">
+        <div class="mb-5 flex justify-content-between">
+          <span class="jobs-container-title">When</span>
+        </div>
+        <!-- When Input -->
+        <div class="flex justify-content-center">
+          <p-selectButton
+            [options]="s.timeOptions"
+            [(ngModel)]="s.selectedTimeOption"
+            optionLabel="label"
+            optionValue="value"
+          ></p-selectButton>
+        </div>
+        <div class="text-white mt-5">
+          <span class="font-bold">
+            The executors will try to execute the job on every new block. </span
+          ><br /><br />
+
+          Please be careful - executing a method every block can occur high gas
+          fees. If this is not what you want then make sure the method won't be
+          always executed.
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== FUNDS CONTAINER =================== -->
+    <div *ngIf="s.selectedMethod" class="jobs-container mt-5">
+      <div class="flex flex-column">
+        <div class="mb-5">
+          <span class="jobs-container-title">Funds</span>
+        </div>
+        <div class="text-center text-white text-2xl">
+          Available Balance: {{ s.balance }}
+        </div>
+
+        <div class="text-white mt-3">
+          Deposit some GAS and make sure your treasury account holds enough
+          balance to cover the transaction fees for this job.
+          <div class="flex mt-3 justify-content-center">
+            <p-inputNumber
+              [(ngModel)]="s.depositAmount"
+              mode="decimal"
+              [minFractionDigits]="8"
+              [maxFractionDigits]="8"
+              class="m-1"
+              styleClass="number-input"
+              placeholder="0.00000000"
+              [min]="0"
+            ></p-inputNumber>
+            <button
+              class="m-1"
+              pButton
+              type="button"
+              (click)="deposit(s.depositAmount)"
+            >
+              Deposit
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== JOB NAME =================== -->
+    <div *ngIf="s.selectedMethod" class="jobs-container mt-5 mb-5">
+      <div class="flex flex-column">
+        <div class="mb-5">
+          <span class="jobs-container-title">Job name</span>
+        </div>
+
+        <div class="p-fluid">
+          <input
+            pInputText
+            type="text"
+            class="new-job-input"
+            placeholder="Enter name"
+            [(ngModel)]="s.taskName"
+          />
+        </div>
+      </div>
+    </div>
+
+    <!-- =================== CREATE BUTTON =================== -->
+
+    <div *ngIf="s.selectedMethod" class="flex justify-content-center mb-5">
+      <button
+        pButton
+        type="button"
+        label="Create"
+        (click)="createJob()"
+      ></button>
     </div>
   </div>
 </ng-container>
