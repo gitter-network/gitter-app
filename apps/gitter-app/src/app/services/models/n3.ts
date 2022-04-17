@@ -1,4 +1,4 @@
-type NeoType =
+export type NeoType =
   | 'Boolean'
   | 'Integer'
   | 'Array'

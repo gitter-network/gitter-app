@@ -1,5 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { environment } from 'apps/gitter-app/src/environments/environment';
+import { Component, Inject } from '@angular/core';
 import { switchMap } from 'rxjs';
 import { GitterJob, GitterService } from '../../services/gitter.service';
 import { NeolineService } from '../../services/neoline.service';
@@ -42,8 +41,6 @@ export class HomeComponent extends RxState<HomeState> {
   readonly state$ = this.select();
   constructor(
     @Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>,
-    private treasury: TreasuryService,
-    private neoline: NeolineService,
     private gitter: GitterService
   ) {
     super();

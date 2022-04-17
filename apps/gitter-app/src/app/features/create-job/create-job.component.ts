@@ -17,10 +17,12 @@ import {
 import { SelectItem } from 'primeng/api';
 import { GlobalState, GLOBAL_RX_STATE } from '../../state/global.state';
 import { TreasuryService } from '../../services/treasury.service';
+import { GitterService } from '../../services/gitter.service';
+import { NeoTypedValue, NeoType } from '../../services/models/n3';
 
 type UpdatedMethodDef = ContractMethodDefinition & { displayName: string };
 interface CreateJobState {
-  contractAddress: string;
+  targetContractHash: string;
   isLoadingContractData: boolean;
   contractMethods: UpdatedMethodDef[];
   selectedMethod: UpdatedMethodDef;
@@ -30,7 +32,7 @@ interface CreateJobState {
   selectedTimeOption: string;
   balance: number;
   depositAmount: number;
-  taskName: string;
+  jobName: string;
   parameters: any[];
 }
 
@@ -59,14 +61,15 @@ export class CreateJobComponent extends RxState<CreateJobState> {
   constructor(
     private neonJs: NeonJSService,
     @Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>,
-    private treasury: TreasuryService
+    private treasury: TreasuryService,
+    private gitter: GitterService
   ) {
     super();
 
     this.connect('balance', this.loadBalance$);
     this.set({
       isLoadingContractData: false,
-      contractAddress: '',
+      targetContractHash: '',
       timeOptions: [
         { value: 'time', label: 'Time', disabled: true },
         { value: 'everyBlock', label: 'Every block' },
@@ -81,13 +84,32 @@ export class CreateJobComponent extends RxState<CreateJobState> {
         },
       ],
       inputOption: 'static',
+      parameters: Array(20).fill(undefined),
     });
     this.connect('contractMethods', this.loadMethods$);
   }
 
   createJob(): void {
-    //TODO
-    console.log(this.get('parameters'));
+    console.log(this.get());
+    console.log(this.mapToTypedParams());
+    this.gitter
+      .createJob(
+        this.get('targetContractHash'),
+        this.get('selectedMethod').name,
+        this.mapToTypedParams(),
+        this.globalState.get('address'),
+        this.get('jobName')
+      )
+      .subscribe((res) => console.log(res));
+  }
+
+  private mapToTypedParams(): NeoTypedValue[] {
+    return this.get('selectedMethod').parameters.map((param, i) => {
+      return {
+        type: ContractParamType[param.type] as NeoType,
+        value: this.get('parameters')[i],
+      };
+    });
   }
 
   deposit(amount: number): void {

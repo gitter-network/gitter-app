@@ -26,8 +26,8 @@
                 type="text"
                 pInputText
                 placeholder="0x..."
-                [(ngModel)]="s.contractAddress"
-                (change)="onContractAddressChange$.next(s.contractAddress)"
+                [(ngModel)]="s.targetContractHash"
+                (change)="onContractAddressChange$.next(s.targetContractHash)"
               />
             </span>
           </span>
@@ -101,7 +101,7 @@
                 class="new-job-input"
                 type="text"
                 pInputText
-                [(ngModel)]="s.parameters[i] || ''"
+                [(ngModel)]="s.parameters[i]"
                 [placeholder]="contractParamType[param.type]"
               />
             </span>
@@ -187,7 +187,7 @@
             type="text"
             class="new-job-input"
             placeholder="Enter name"
-            [(ngModel)]="s.taskName"
+            [(ngModel)]="s.jobName"
           />
         </div>
       </div>

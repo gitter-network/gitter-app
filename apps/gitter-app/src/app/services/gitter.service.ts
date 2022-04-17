@@ -12,6 +12,8 @@ export interface GitterJob {
   method: string;
   creator: string;
   args: { type: string; value: string }[];
+  paidFees: number;
+  name: string;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -28,13 +30,22 @@ export class GitterService {
       .pipe(map((res) => this.mapToGitterJobs(res)));
   }
 
+  public getFeesForJob(job: string): Observable<number> {
+    return this.neonjs.rpcRequest(
+      'getPaidFeesForJob',
+      [sc.ContractParam.byteArray(job)],
+      environment.testnet.contracts.core
+    );
+  }
+
   public createTimedJob(
     interval: number,
     startTime: number,
     contractHash: string,
     method: string,
     calldataArgs: NeoTypedValue[],
-    creator: string
+    creator: string,
+    name: string
   ): Observable<NeoInvokeWriteResponse> {
     const args = [
       {
@@ -47,6 +58,34 @@ export class GitterService {
           NeolineService.string(method),
           NeolineService.array(calldataArgs),
           NeolineService.hash160(creator),
+          NeolineService.string(name),
+        ],
+      },
+    ];
+
+    return this.neoline.invokeMultiple({
+      signers: [{ account: new wallet.Account(creator).scriptHash, scopes: 1 }],
+      invokeArgs: [...args],
+    });
+  }
+
+  public createJob(
+    contractHash: string,
+    method: string,
+    calldataArgs: NeoTypedValue[],
+    creator: string,
+    name: string
+  ): Observable<NeoInvokeWriteResponse> {
+    const args = [
+      {
+        scriptHash: environment.testnet.contracts.core,
+        operation: 'createJob',
+        args: [
+          NeolineService.hash160(contractHash),
+          NeolineService.string(method),
+          NeolineService.array(calldataArgs),
+          NeolineService.hash160(creator),
+          NeolineService.string(name),
         ],
       },
     ];
@@ -74,6 +113,8 @@ export class GitterService {
           this.processBase64Hash160(jobValues[2])
         ),
         args: jobValues[3],
+        name: atob(jobValues[4] ?? ''), //TODO: remove ?? "". Just a temporary fix because old contract version had no name property
+        paidFees: jobValues[5] / (10 * Math.pow(10, 8)),
       };
       jobs.push(job);
     });
