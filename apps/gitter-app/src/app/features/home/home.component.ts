@@ -6,6 +6,8 @@ import { TreasuryService } from '../../services/treasury.service';
 import { RxState } from '@rx-angular/state';
 import { SelectItem } from 'primeng/api';
 import { GlobalState, GLOBAL_RX_STATE } from '../../state/global.state';
+import { Router } from '@angular/router';
+import { sc, u } from '@cityofzion/neon-js';
 
 interface HomeState {
   jobs: GitterJob[];
@@ -41,7 +43,8 @@ export class HomeComponent extends RxState<HomeState> {
   readonly state$ = this.select();
   constructor(
     @Inject(GLOBAL_RX_STATE) private globalState: RxState<GlobalState>,
-    private gitter: GitterService
+    private gitter: GitterService,
+    private router: Router
   ) {
     super();
     this.set(DEFAULT_STATE);
@@ -52,6 +55,10 @@ export class HomeComponent extends RxState<HomeState> {
         .select('address')
         .pipe(switchMap((a) => this.gitter.jobsOf(a)))
     );
+  }
+
+  gotoJob(id: string): void {
+    this.router.navigate(['/jobs/' + u.base642hex(id)]);
   }
 
   /* private getAccountData(address: string): Observable<AccountDat> {

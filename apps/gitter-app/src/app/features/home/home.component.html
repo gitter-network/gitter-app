@@ -27,7 +27,7 @@
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-job let-i="rowIndex">
-            <tr class="table-row">
+            <tr class="table-row cursor-pointer" (click)="gotoJob(job.id)">
               <td>
                 {{ i + 1 }}
               </td>

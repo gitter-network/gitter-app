@@ -16,6 +16,14 @@ const routes: Routes = [
         (m) => m.CreateJobModule
       ),
   },
+  {
+    path: 'jobs/:jobId',
+    canActivate: [],
+    loadChildren: () =>
+      import('./features/job-details/job-details.module').then(
+        (m) => m.JobDetailsModule
+      ),
+  },
 ];
 
 @NgModule({

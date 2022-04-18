@@ -1,7 +1,7 @@
 <ng-container *ngIf="state$ | async as s">
   <div class="gitter-menu flex justify-content-between align-items-center">
     <div class="flex">
-      <h1>gitter</h1>
+      <h1><a routerLink="" class="text-logo">gitter</a></h1>
       <button
         *ngIf="s.address"
         pButton
