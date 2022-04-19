@@ -17,7 +17,7 @@ const routes: Routes = [
       ),
   },
   {
-    path: 'jobs/:jobId',
+    path: 'job/:jobId',
     canActivate: [],
     loadChildren: () =>
       import('./features/job-details/job-details.module').then(

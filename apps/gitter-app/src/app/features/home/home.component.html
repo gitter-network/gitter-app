@@ -23,7 +23,7 @@
               <th>#</th>
               <th>Details</th>
               <th>Executions</th>
-              <th class="text-right">Total Tx Fees</th>
+              <th class="text-right">Total tx fees</th>
             </tr>
           </ng-template>
           <ng-template pTemplate="body" let-job let-i="rowIndex">
@@ -52,7 +52,7 @@
                   >
                 </div>
               </td>
-              <td class="text-center">0</td>
+              <td class="text-center">{{ job.executions }}</td>
               <td>
                 <div class="text-right">
                   <span class="job-title"

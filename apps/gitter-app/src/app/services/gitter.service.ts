@@ -14,6 +14,8 @@ export interface GitterJob {
   args: { type: string; value: string }[];
   paidFees: number;
   name: string;
+  executions: number;
+  createdAt: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -27,7 +29,21 @@ export class GitterService {
         [sc.ContractParam.hash160(address)],
         environment.testnet.contracts.core
       )
-      .pipe(map((res) => this.mapToGitterJobs(res)));
+      .pipe(
+        map((res) =>
+          this.mapToGitterJobs(res).sort((a, b) => b.createdAt - a.createdAt)
+        )
+      );
+  }
+
+  public getJob(jobId: string): Observable<any> {
+    return this.neonjs
+      .rpcRequest(
+        'getJob',
+        [sc.ContractParam.byteArray(jobId)],
+        environment.testnet.contracts.core
+      )
+      .pipe(map((res) => this.mapToGitterJob(res)));
   }
 
   public getFeesForJob(job: string): Observable<number> {
@@ -105,6 +121,7 @@ export class GitterService {
       const value = v.value[0];
       const key = value.key.value;
       const jobValues = value.value.value.map((v: any) => v.value);
+
       const job: GitterJob = {
         id: key,
         contract: '0x' + this.processBase64Hash160(jobValues[0]),
@@ -114,12 +131,30 @@ export class GitterService {
         ),
         args: jobValues[3],
         name: atob(jobValues[4] ?? ''), //TODO: remove ?? "". Just a temporary fix because old contract version had no name property
-        paidFees: jobValues[5] / (10 * Math.pow(10, 8)),
+        paidFees: jobValues[5] / Math.pow(10, 8),
+        executions: jobValues[6],
+        createdAt: jobValues[7],
       };
       jobs.push(job);
     });
 
     return jobs;
+  }
+
+  private mapToGitterJob(res: { type: string; value: any }[]): GitterJob {
+    return {
+      id: '',
+      contract: '0x' + this.processBase64Hash160(res[0].value),
+      method: atob(res[1].value),
+      creator: wallet.getAddressFromScriptHash(
+        this.processBase64Hash160(res[2].value)
+      ),
+      args: res[3].value,
+      name: atob(res[4].value), //TODO: remove ?? "". Just a temporary fix because old contract version had no name property
+      paidFees: res[5].value / Math.pow(10, 8),
+      executions: res[6].value,
+      createdAt: res[7].value,
+    };
   }
 
   private processBase64Hash160(base64: string): string {

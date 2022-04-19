@@ -8,6 +8,7 @@ import { TableModule } from 'primeng/table';
 import { TagModule } from 'primeng/tag';
 import { InputTextModule } from 'primeng/inputtext';
 import { InputNumberModule } from 'primeng/inputnumber';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @NgModule({
   declarations: [TruncateAddressPipe],
@@ -21,6 +22,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     CommonModule,
     InputTextModule,
     InputNumberModule,
+    ProgressSpinnerModule,
   ],
   exports: [
     SelectButtonModule,
@@ -33,6 +35,7 @@ import { InputNumberModule } from 'primeng/inputnumber';
     TruncateAddressPipe,
     InputTextModule,
     InputNumberModule,
+    ProgressSpinnerModule,
   ],
 })
 export class SharedModule {}
