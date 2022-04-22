@@ -35,7 +35,7 @@
                 <div>
                   <div class="flex">
                     <div class="text-xl mb-2">
-                      <p>{{ job.name }}</p>
+                      <p>{{ job.name || 'My Job' }}</p>
                     </div>
                     <div
                       class="status-tag flex align-items-center justify-content-center"
@@ -52,14 +52,16 @@
                   >
                 </div>
               </td>
-              <td class="text-center">{{ job.executions }}</td>
+              <td class="text-center">{{ job.executions.length }}</td>
               <td>
                 <div class="text-right">
                   <span class="job-title"
-                    ><p>{{ job.paidFees }} GAS</p></span
+                    ><p>{{ job.totalFees / 100000000 }} GAS</p></span
                   >
                   <span class="job-subtitle"
-                    ><p>${{ (3 * job.paidFees).toFixed(2) }}</p></span
+                    ><p>
+                      ${{ 3 * (job.totalFees / 100000000) | number: '0.2-2' }}
+                    </p></span
                   >
                 </div>
               </td>

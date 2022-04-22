@@ -12,10 +12,13 @@ export interface GitterJob {
   method: string;
   creator: string;
   args: { type: string; value: string }[];
-  paidFees: number;
+  paidFees: number[];
   name: string;
-  executions: number;
+  executions: number[];
   createdAt: number;
+  interval: number;
+  nextExec: number;
+  totalFees: number;
 }
 
 @Injectable({ providedIn: 'root' })
@@ -131,9 +134,14 @@ export class GitterService {
         ),
         args: jobValues[3],
         name: atob(jobValues[4] ?? ''), //TODO: remove ?? "". Just a temporary fix because old contract version had no name property
-        paidFees: jobValues[5] / Math.pow(10, 8),
-        executions: jobValues[6],
+        paidFees: jobValues[5].map((v: any) => v.value),
+        executions: jobValues[6].map((v: any) => v.value),
         createdAt: jobValues[7],
+        interval: jobValues[8],
+        nextExec: jobValues[9],
+        totalFees: jobValues[5]
+          .map((v: any) => v.value)
+          .reduce((p: any, c: any) => Number(p) + Number(c), 0),
       };
       jobs.push(job);
     });
@@ -142,6 +150,7 @@ export class GitterService {
   }
 
   private mapToGitterJob(res: { type: string; value: any }[]): GitterJob {
+    console.log(res[5].value.map((v: any) => v.value));
     return {
       id: '',
       contract: '0x' + this.processBase64Hash160(res[0].value),
@@ -151,9 +160,15 @@ export class GitterService {
       ),
       args: res[3].value,
       name: atob(res[4].value), //TODO: remove ?? "". Just a temporary fix because old contract version had no name property
-      paidFees: res[5].value / Math.pow(10, 8),
-      executions: res[6].value,
+      paidFees: res[5].value.map((v: any) => v.value),
+      executions: res[6].value.map((v: any) => v.value),
       createdAt: res[7].value,
+      interval: res[8].value,
+      nextExec: res[9].value,
+      totalFees: (res[5].value.map((v: any) => v.value) as number[]).reduce(
+        (p, c) => Number(p) + Number(c),
+        0
+      ),
     };
   }
 

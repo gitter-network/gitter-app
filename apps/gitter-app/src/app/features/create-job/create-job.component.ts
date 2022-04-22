@@ -89,9 +89,21 @@ export class CreateJobComponent extends RxState<CreateJobState> {
     this.connect('contractMethods', this.loadMethods$);
   }
 
+  createTimedJob(): void {
+    this.gitter
+      .createTimedJob(
+        15 * 1000,
+        0,
+        this.get('targetContractHash'),
+        this.get('selectedMethod').name,
+        this.mapToTypedParams(),
+        this.globalState.get('address'),
+        this.get('jobName')
+      )
+      .subscribe((res) => console.log(res));
+  }
+
   createJob(): void {
-    console.log(this.get());
-    console.log(this.mapToTypedParams());
     this.gitter
       .createJob(
         this.get('targetContractHash'),
