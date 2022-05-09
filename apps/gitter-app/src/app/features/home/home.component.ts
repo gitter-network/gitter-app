@@ -26,8 +26,9 @@ const DEFAULT_STATE: HomeState = {
       value: 'myjobs',
     },
     {
-      label: 'Leaderboard',
-      value: 'leaderboard',
+      label: 'All Jobs',
+      value: 'alljobs',
+      disabled: true,
     },
   ],
 };
